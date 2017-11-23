@@ -8,10 +8,15 @@ public class BubbleScript : MonoBehaviour {
 	private int frame;
 	public GameObject master;
 	private GameObject clone;
-	private int counter;
+	public static int counter = 0;
+	private Rigidbody2D rigidBody;
+	private bool isDetroyed = false;
+	private float defaultGravity = -0.1f;
 	// Use this for initialization
 	void Start () {
 		anim = GetComponent<Animator>();
+		rigidBody = GetComponent<Rigidbody2D> ();
+		rigidBody.gravityScale = defaultGravity;
 	}
 	
 	// Update is called once per frame
@@ -23,10 +28,10 @@ public class BubbleScript : MonoBehaviour {
 
 	void OnMouseDown()
 	{
-		if(Input.GetMouseButton(0))
+		if(Input.GetMouseButton(0)&&!isDetroyed)
 		{
+			isDetroyed = true;
 			playAnimation ("bubble_burst");
-			Waiting ();
 			regenerateBubble ();
 		}
 	}
@@ -35,10 +40,9 @@ public class BubbleScript : MonoBehaviour {
 	 */ 
 	private void regenerateBubble ()
 	{
-		clone = Instantiate(master, GeneratedPosition(), Quaternion.identity) as GameObject;
-		clone.transform.parent = transform;
-		Destroy (bubble);
-		bubble = go;
+			clone = Instantiate (master, GeneratedPosition (), Quaternion.identity) as GameObject;
+			master.GetComponent<Rigidbody2D> ().gravityScale = 0.0F;
+			Destroy (master,1);
 	}
 
 	private void playAnimation(string animName)
