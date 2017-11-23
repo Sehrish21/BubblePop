@@ -6,7 +6,9 @@ public class BubbleScript : MonoBehaviour {
 
 	Animator anim;
 	private int frame;
-	public GameObject bubble;
+	public GameObject master;
+	private GameObject clone;
+	private int counter;
 	// Use this for initialization
 	void Start () {
 		anim = GetComponent<Animator>();
@@ -23,16 +25,25 @@ public class BubbleScript : MonoBehaviour {
 	{
 		if(Input.GetMouseButton(0))
 		{
+			playAnimation ("bubble_burst");
+			Waiting ();
 			regenerateBubble ();
 		}
 	}
 
+	/** OnClick event
+	 */ 
 	private void regenerateBubble ()
 	{
-		anim.Play("bubble_burst",-1,0f);
-		Waiting ();
-		anim.Play("bubbleAnimation");
-		bubble.transform.Translate (GeneratedPosition());
+		clone = Instantiate(master, GeneratedPosition(), Quaternion.identity) as GameObject;
+		clone.transform.parent = transform;
+		Destroy (bubble);
+		bubble = go;
+	}
+
+	private void playAnimation(string animName)
+	{
+		anim.Play(animName,-1,0f);
 	}
 
 	IEnumerator Waiting()

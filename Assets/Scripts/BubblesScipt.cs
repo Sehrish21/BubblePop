@@ -22,24 +22,51 @@ public class BubblesScipt : MonoBehaviour {
 		ParticleSystem.Particle[] particles = new ParticleSystem.Particle[ps.particleCount];
 
 		int num = ps.GetParticles(particles);
-		Debug.Log (num);
 		while (--num >= 0)
 		{
 			if (particles[num].position.x > maxXPosition || 
 				particles[num].position.x < minXPosition || 
 				particles[num].position.y > maxYPosition)
 			{
-				Debug.Log ("Destroying " + num);
 				particles[num].lifetime = 0;
 			}
 		}
 
 		ps.SetParticles(particles, particles.Length);
 	}
+
+	void onClickParticle ()
+	{
+		
+		ParticleSystem.Particle[] particles = new ParticleSystem.Particle[ps.particleCount];
+
+		int num = ps.GetParticles(particles);
+
+		while (--num >= 0)
+		{
+			var p = particles[num];
+			if (Physics.Raycast(p.position, -Vector3.up, 0.1f))
+			{
+				particles [num].lifetime = 0;
+
+			}
+		}
+		ps.SetParticles(particles, particles.Length);
+	}
+
+	void onMouseClick()
+	{
+		if (Input.GetMouseButtonDown (0)) {
+			Debug.Log ("onMouseClick");
+
+		}
+
+	}
 	
 	// Update is called once per frame
 	void Update () {
 
 		removeTheParticles();
+		onMouseClick ();
 	}
 }
